@@ -5,6 +5,7 @@ import cors from "cors";
 dotenv.config();
 
 import authRouters from "./routers/authRouters.js";
+import urlsRouters from "./routers/urlsRouters.js";
 
 const app = express();
 
@@ -13,6 +14,9 @@ app.use(express.json());
 
 //authRouters
 app.use(authRouters);
+
+//urlsRouters
+app.use(urlsRouters);
 
 app.listen(process.env.PORT, () => {
     console.log(chalk.bold.green("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
