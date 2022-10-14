@@ -2,8 +2,16 @@ import { db } from "../database/db.js";
 
 import { nanoid } from 'nanoid';
 
+import {urlSchema} from "../schemas/urlSchemas.js";
+
 async function shortenUrl(req, res) {
     const {url} = req.body;
+
+    const validation = urlSchema.validate({url})
+    if (validation.error) {
+        return res.status(422).send(validation.error.details[0].message);
+    } 
+
     const token = req.headers.authorization?.replace("Bearer ", "");
     if (!token) {
         return res.sendStatus(401);
