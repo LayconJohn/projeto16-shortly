@@ -92,13 +92,51 @@ async function deleteUrl(req, res) {
             return res.sendStatus(404);
         }
 
+        //verificar se a url é do usuário
         if (url.userId !== session.userId) {
             return res.sendStatus(401);
         }
-
+        //deletar url
         await db.query('DELETE FROM urls WHERE id = $1', [id]);
 
         return res.sendStatus(204);
+    } catch (error) {
+        console.error(error.message);
+        return res.sendStatus(500);
+    }
+}
+
+async function getUrlsByUser(req, res) {
+    //token
+    const token = req.headers.authorization?.replace("Bearer ", "");
+    if (!token) {
+        return res.sendStatus(401);
+    }
+
+    try {
+        //verificar sessão
+        const session = (await db.query('SELECT * FROM sessions WHERE token = $1', [token])).rows[0];
+        if (!session) {
+            return res.sendStatus(401);
+        }
+
+        //verificar usuário
+        const user = (await db.query('SELECT * FROM users WHERE id = $1', [session.userId])).rows[0];
+        if (!user) {
+            return res.sendStatus(404);
+        }
+
+        const urls = (await db.query('SELECT id, "shortUrl", url, "visitCount" FROM urls WHERE "userId" = $1', [user.id])).rows;
+        let visitCount = 0;
+        urls.map( url => visitCount += url.visitCount);
+        const body = {
+            id: user.id,
+            name: user.name,
+            visitCount: visitCount,
+            shortenUrls: urls
+        }
+        return res.status(200).send(body);
+
     } catch (error) {
         console.error(error.message);
         return res.sendStatus(500);
@@ -110,4 +148,5 @@ export {
     getUrlById,
     redirectUrl,
     deleteUrl,
+    getUrlsByUser,
 };

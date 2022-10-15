@@ -6,6 +6,7 @@ dotenv.config();
 
 import authRouters from "./routers/authRouters.js";
 import urlsRouters from "./routers/urlsRouters.js";
+import usersRouters from "./routers/usersRouters.js";
 
 const app = express();
 
@@ -17,6 +18,9 @@ app.use(authRouters);
 
 //urlsRouters
 app.use(urlsRouters);
+
+//urlRouters
+app.use(usersRouters);
 
 app.listen(process.env.PORT, () => {
     console.log(chalk.bold.green("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"));
