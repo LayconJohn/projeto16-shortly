@@ -20,7 +20,7 @@ async function registerUser(req, res) {
     const encryptedPassword = bcrypt.hashSync(password, 12);
 
     try {
-        const user = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+        const user = (await db.query('SELECT * FROM users WHERE email = $1', [email])).rows[0];
         if (user) {
             return res.sendStatus(409);
         }

@@ -69,8 +69,45 @@ async function redirectUrl(req, res) {
     }
 }
 
+async function deleteUrl(req, res) {
+    //id
+    const {id} = req.params;
+
+    //token
+    const token = req.headers.authorization?.replace("Bearer ", "");
+    if (!token) {
+        return res.sendStatus(401);
+    }
+
+    try {
+        //verificar sessão
+        const session = (await db.query('SELECT * FROM sessions WHERE token = $1', [token])).rows[0];
+        if (!session) {
+            return res.sendStatus(401);
+        }
+
+        //verificar url
+        const url = (await db.query('SELECT * FROM urls WHERE id = $1', [id])).rows[0];
+        if (!url) {
+            return res.sendStatus(404);
+        }
+
+        if (url.userId !== session.userId) {
+            return res.sendStatus(401);
+        }
+
+        await db.query('DELETE FROM urls WHERE id = $1', [id]);
+
+        return res.sendStatus(204);
+    } catch (error) {
+        console.error(error.message);
+        return res.sendStatus(500);
+    }
+}
+
 export {
     shortenUrl, 
     getUrlById,
-    redirectUrl
+    redirectUrl,
+    deleteUrl,
 };
