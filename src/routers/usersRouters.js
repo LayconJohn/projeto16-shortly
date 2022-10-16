@@ -1,9 +1,10 @@
 import { Router } from "express";
 
-import { getUrlsByUser } from "../controllers/urlsControllers.js";
+import { getUrlsByUser, getRanking } from "../controllers/usersControllers.js";
 
 const router = Router();
 
 router.get("/users/me", getUrlsByUser);
+router.get("/ranking", getRanking);
 
 export default router;

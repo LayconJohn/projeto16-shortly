@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { shortenUrl, getUrlById, redirectUrl, deleteUrl, getUrlsByUser } from "../controllers/urlsControllers.js";
+import { shortenUrl, getUrlById, redirectUrl, deleteUrl } from "../controllers/urlsControllers.js";
 
 const router = Router();
 
