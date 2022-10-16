@@ -2,12 +2,13 @@ import pg from 'pg';
 
 const { Pool } = pg;
 
-const db = new Pool({
-    user: 'postgres',
-    password: '123456',
-    host: 'localhost',
-    port: '5432',
-    database: 'shortly'
-});
+const databaseConfig = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+}
 
-export { db };
+const db = new Pool(databaseConfig);
+
+export { db };''
