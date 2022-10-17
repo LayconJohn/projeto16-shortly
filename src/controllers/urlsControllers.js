@@ -23,13 +23,13 @@ async function getUrlById(req, res) {
     if (!id) {
         return res.sendStatus(404);
     }
+    const url = res.locals.url;
     try {
-        const url = (await db.query('SELECT id, "shortUrl", url FROM urls WHERE id = $1', [id])).rows[0];
-        if (!url) {
-            return res.sendStatus(404);
-        }
-        
-        return res.status(200).send(url);
+        return res.status(200).send({
+            id: url.id,
+            shortUrl: url.shortUrl,
+            url: url.url
+        });
     } catch (error) {
         console.error(error.message);
         return res.sendStatus(500);
@@ -37,16 +37,10 @@ async function getUrlById(req, res) {
 }
 
 async function redirectUrl(req, res) {
-    const {shortUrl} = req.params;
+    const url = res.locals.url;
 
     try {
-        const url = (await db.query('SELECT * FROM urls WHERE "shortUrl" = $1', [shortUrl])).rows[0];
-        if (!url) {
-            return res.sendStatus(404);
-        }
-
         await db.query('UPDATE urls SET "visitCount" = $1 WHERE id = $2', [(url.visitCount + 1), url.id]);
-        console.log(url);
         return res.redirect(url.url);
     } catch (error) {
         console.error(error.message);
