@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 
 async function shortenUrl(req, res) {
     const {url} = req.body;
+    const session = res.locals.session;
 
     const shortUrl = nanoid(10);
     try {
@@ -54,23 +55,13 @@ async function redirectUrl(req, res) {
 }
 
 async function deleteUrl(req, res) {
-    //id
     const {id} = req.params;
-
-
+    const session = res.locals.session;
+    const url = res.locals.url;
     try {
-
-        //verificar url
-        const url = (await db.query('SELECT * FROM urls WHERE id = $1', [id])).rows[0];
-        if (!url) {
-            return res.sendStatus(404);
-        }
-
-        //verificar se a url é do usuário
         if (url.userId !== session.userId) {
             return res.sendStatus(401);
         }
-        //deletar url
         await db.query('DELETE FROM urls WHERE id = $1', [id]);
 
         return res.sendStatus(204);

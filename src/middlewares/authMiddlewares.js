@@ -53,6 +53,7 @@ async function checkToken(req, res, next) {
         if (!session) {
             return res.sendStatus(401);
         }
+        res.locals.session = session;
         next();
     } catch (error) {
         console.error(error.message);
