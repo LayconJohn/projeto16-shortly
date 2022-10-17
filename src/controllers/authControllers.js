@@ -2,8 +2,6 @@ import { db } from '../database/db.js';
 
 import { v4 as uuid } from "uuid";
 
-import { signInSchema} from "../schemas/authSchemas.js";
-
 async function registerUser(req, res) {
     const { name, email, password } = req.body;
 

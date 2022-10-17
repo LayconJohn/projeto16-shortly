@@ -42,8 +42,28 @@ async function checkLoginUser(req, res, next) {
 
 }
 
+async function checkToken(req, res, next) {
+    const token = req.headers.authorization?.replace("Bearer ", "");
+    if (!token) {
+        return res.sendStatus(401);
+    }
+
+    try {
+        const session = (await db.query('SELECT * FROM sessions WHERE token = $1', [token])).rows[0];
+        if (!session) {
+            return res.sendStatus(401);
+        }
+        next();
+    } catch (error) {
+        console.error(error.message);
+        return res.sendStatus(500);
+    }
+    
+}
+
 export {
     checkPassword,
     checkExistingUser,
     checkLoginUser,
+    checkToken,
 };
