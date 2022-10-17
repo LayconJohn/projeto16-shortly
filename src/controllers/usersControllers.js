@@ -1,24 +1,8 @@
 import { db } from "../database/db.js";
 
 async function getUrlsByUser(req, res) {
-    //token
-    const token = req.headers.authorization?.replace("Bearer ", "");
-    if (!token) {
-        return res.sendStatus(401);
-    }
-
+    const user = res.locals.user;
     try {
-        //verificar sessão
-        const session = (await db.query('SELECT * FROM sessions WHERE token = $1', [token])).rows[0];
-        if (!session) {
-            return res.sendStatus(401);
-        }
-
-        //verificar usuário
-        const user = (await db.query('SELECT * FROM users WHERE id = $1', [session.userId])).rows[0];
-        if (!user) {
-            return res.sendStatus(404);
-        }
 
         const urls = (await db.query('SELECT id, "shortUrl", url, "visitCount" FROM urls WHERE "userId" = $1', [user.id])).rows;
         let visitCount = 0;
