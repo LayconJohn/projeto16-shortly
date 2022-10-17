@@ -7,24 +7,18 @@ import {signUpSchema, signInSchema} from "../schemas/authSchemas.js";
 async function registerUser(req, res) {
     const { name, email, password, confirmPassword } = req.body;
 
-    if (password !== confirmPassword) {
-        return res.status(422).send("Os campos de senha e confirmar senha devem ser iguais.");
-    }
-
     const validation = signUpSchema.validate({name, email, password, confirmPassword}, {abortEarly: false});
     if (validation.error) {
         const errors = validation.error.details.map( detail => detail.message);
         return res.status(422).send(errors);
     }
-
-    const encryptedPassword = bcrypt.hashSync(password, 12);
-
+    const encryptedPassword = bcrypt.hashSync(password, 10);
+    console.log("Criei senha criptografada")
     try {
-        const user = (await db.query('SELECT * FROM users WHERE email = $1', [email])).rows[0];
-        if (user) {
+        const user = (await db.query('SELECT * FROM users WHERE email = $1', [email]));
+        if (user.rows[0]) {
             return res.sendStatus(409);
         }
-
         await db.query('INSERT INTO users (name, email, password) VALUES ($1, $2, $3)', [name, email, encryptedPassword]);
         return res.sendStatus(201)
     } catch (error) {
