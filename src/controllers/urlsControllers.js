@@ -42,14 +42,12 @@ async function deleteUrl(req, res) {
     const session = res.locals.session;
     const url = res.locals.url;
     try {
-        if (url.userId !== session.userId) {
-            return res.sendStatus(401);
-        }
-        await db.query('DELETE FROM urls WHERE id = $1', [id]);
-
+        await urlService.deleteUrl(url, session, id);
         return res.sendStatus(204);
     } catch (error) {
-        console.error(error.message);
+        if (error.message === "UNAUTHORIZED") {
+            return res.sendStatus(401);
+        }
         return res.sendStatus(500);
     }
 }

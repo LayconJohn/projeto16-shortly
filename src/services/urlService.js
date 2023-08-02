@@ -23,10 +23,18 @@ async function redirectUrl(url) {
     return await urlRepository.redirectUrl(url);
 }
 
+async function deleteUrl(url, session, id) {
+    if (url.userId !== session.userId) {
+        throw new Error("UNAUTHORIZED")
+    }
+    return await urlRepository.deleteUrl(id);
+}
+
 const urlService = {
     shortenUrl,
     getUrlById,
     redirectUrl,
+    deleteUrl,
 };
 
 export default urlService;
