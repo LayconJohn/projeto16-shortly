@@ -10,6 +10,7 @@ async function register(name, email, encryptedPassword) {
 
 const authRepository = {
     login,
+    register,
 };
 
 export default authRepository;
