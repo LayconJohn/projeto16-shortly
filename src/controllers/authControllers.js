@@ -2,11 +2,8 @@ import authService from "../services/authService.js";
 
 async function registerUser(req, res) {
     const { name, email, password } = req.body;
-
-    const encryptedPassword = bcrypt.hashSync(password, 10);
     try {
-
-        await db.query('INSERT INTO users (name, email, password) VALUES ($1, $2, $3)', [name, email, encryptedPassword]);
+        await authService.register(name, email, password);
         return res.sendStatus(201)
     } catch (error) {
         console.log(error.message);
