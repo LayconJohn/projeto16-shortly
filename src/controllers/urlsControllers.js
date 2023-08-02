@@ -1,21 +1,15 @@
-import { db } from "../database/db.js";
-
-import { nanoid } from 'nanoid';
+import urlService from "../services/urlService.js";
 
 async function shortenUrl(req, res) {
     const {url} = req.body;
-    const session = res.locals.session;
-
-    const shortUrl = nanoid(10);
+    const session = res.locals.session;    
     try {
-        await db.query('INSERT INTO urls (url, "shortUrl", "userId") VALUES ($1, $2, $3)', [url, shortUrl, session.userId]);
-
+        const shortUrl = await urlService.shortenUrl(session.id, url);
         return res.status(201).send({shortUrl: `${shortUrl}`});
     } catch (error) {
         console.error(error.message);
         return res.sendStatus(500);
-    }
-    
+    } 
 }
 
 async function getUrlById(req, res) {
