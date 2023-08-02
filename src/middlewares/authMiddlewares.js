@@ -59,7 +59,6 @@ async function checkToken(req, res, next) {
         console.error(error.message);
         return res.sendStatus(500);
     }
-    
 }
 
 export {

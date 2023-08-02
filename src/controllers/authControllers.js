@@ -1,6 +1,4 @@
-import { db } from '../database/db.js';
-
-import { v4 as uuid } from "uuid";
+import authService from "../services/authService.js";
 
 async function registerUser(req, res) {
     const { name, email, password } = req.body;
@@ -19,9 +17,7 @@ async function registerUser(req, res) {
 async function loginUser(req, res) {
     const user = res.locals.user;
     try {
-        const token = uuid();
-        await db.query('INSERT INTO sessions ("userId", token) VALUES ($1, $2)', [user.id, token]);
-
+        const token = await authService.login(user);
         return res.status(200).send({token: token});
 
     } catch (error) {
