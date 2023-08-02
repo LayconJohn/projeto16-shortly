@@ -1,20 +1,10 @@
-import { db } from "../database/db.js";
+import userService from "../services/userService.js";
 
 async function getUrlsByUser(req, res) {
     const user = res.locals.user;
     try {
-
-        const urls = (await db.query('SELECT id, "shortUrl", url, "visitCount" FROM urls WHERE "userId" = $1', [user.id])).rows;
-        let visitCount = 0;
-        urls.map( url => visitCount += url.visitCount);
-        const body = {
-            id: user.id,
-            name: user.name,
-            visitCount: visitCount,
-            shortenUrls: urls
-        }
+        const body = await userService(user);
         return res.status(200).send(body);
-
     } catch (error) {
         console.error(error.message);
         return res.sendStatus(500);
