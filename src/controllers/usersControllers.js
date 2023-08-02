@@ -16,7 +16,6 @@ async function getRanking(req, res) {
         const ranking = await userService.getRanking();
         return res.status(200).send(ranking);
     } catch (error) {
-        console.error(error.message);
         return res.sendStatus(500);
     }
 }
