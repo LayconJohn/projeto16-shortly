@@ -14,18 +14,14 @@ async function shortenUrl(req, res) {
 
 async function getUrlById(req, res) {
     const {id} = req.params;
-    if (!id) {
-        return res.sendStatus(404);
-    }
     const url = res.locals.url;
     try {
-        return res.status(200).send({
-            id: url.id,
-            shortUrl: url.shortUrl,
-            url: url.url
-        });
+        const urlById = await urlService.getUrlById(url, id);
+        return res.status(200).send(urlById);
     } catch (error) {
-        console.error(error.message);
+        if (error.message === "NOT_FOUND") {
+            return res.sendStatus(404);
+        }
         return res.sendStatus(500);
     }
 }
