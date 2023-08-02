@@ -12,8 +12,13 @@ async function getUrlsByUser(user) {
     }
 }
 
+async function getRanking() {
+    return await userRepository.getRanking();
+}
+
 const userService = {
     getUrlsByUser,
+    getRanking,
 };
 
 export default userService;
