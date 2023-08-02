@@ -19,9 +19,14 @@ async function getUrlById(url, id) {
     };
 }
 
+async function redirectUrl(url) {
+    return await urlRepository.redirectUrl(url);
+}
+
 const urlService = {
     shortenUrl,
-    getUrlById
+    getUrlById,
+    redirectUrl,
 };
 
 export default urlService;

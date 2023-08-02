@@ -30,10 +30,9 @@ async function redirectUrl(req, res) {
     const url = res.locals.url;
 
     try {
-        await db.query('UPDATE urls SET "visitCount" = $1 WHERE id = $2', [(url.visitCount + 1), url.id]);
+        await urlService.redirectUrl(url);
         return res.redirect(url.url);
     } catch (error) {
-        console.error(error.message);
         return res.sendStatus(500);
     }
 }
