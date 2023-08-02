@@ -19,9 +19,7 @@ async function loginUser(req, res) {
     try {
         const token = await authService.login(user);
         return res.status(200).send({token: token});
-
     } catch (error) {
-        console.log(error.message);
         return res.sendStatus(500);
     }
 }
