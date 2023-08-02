@@ -6,7 +6,6 @@ async function registerUser(req, res) {
         await authService.register(name, email, password);
         return res.sendStatus(201)
     } catch (error) {
-        console.log(error.message);
         return res.sendStatus(500);
     }
 };
