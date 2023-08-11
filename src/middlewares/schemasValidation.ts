@@ -1,5 +1,5 @@
-import { signUpSchema, signInSchema } from "../schemas/authSchemas.js";
-import {urlSchema} from "../schemas/urlSchemas.js"
+import { signUpSchema, signInSchema } from "../models/schemas/authSchemas.js";
+import {urlSchema} from "../models/schemas/urlSchemas.js"
 
 function validateUserSignUp(req, res, next) {
     const { name, email, password, confirmPassword } = req.body;

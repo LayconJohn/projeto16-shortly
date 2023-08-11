@@ -1,5 +1,6 @@
 import {db} from "../database/db.js";
 import bcrypt from "bcrypt";
+import { LoginUserDto } from "../models/dto/user/loginUserDto.js";
 
 function checkPassword(req, res, next) {
     const { password, confirmPassword } = req.body;
@@ -24,7 +25,7 @@ async function checkExistingUser(req, res, next) {
 }
 
 async function checkLoginUser(req, res, next) {
-    const {email, password} = req.body;
+    const {email, password} = req.body as LoginUserDto;
 
     try {
         const user = (await db.query('SELECT * FROM users WHERE email = $1', [email])).rows[0];
