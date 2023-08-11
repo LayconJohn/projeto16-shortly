@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { LoginUserDto } from "../models/dto/user/loginUserDto.js";
 import { NextFunction, Request, Response } from "express";
 import { CreateUser } from "../models/dto/user/createUserDto.js";
+import { User } from "../models/entity/userEntity.js";
 
 function checkPassword(req: Request, res: Response, next: NextFunction) {
     const { password, confirmPassword } = req.body as CreateUser;
@@ -30,7 +31,7 @@ async function checkLoginUser(req, res, next) {
     const {email, password} = req.body as LoginUserDto;
 
     try {
-        const user = (await db.query('SELECT * FROM users WHERE email = $1', [email])).rows[0];
+        const user: User = (await db.query('SELECT * FROM users WHERE email = $1', [email])).rows[0];
         const passwordIsCorrect = bcrypt.compareSync(password, user.password);
 
         if(user && passwordIsCorrect) {
