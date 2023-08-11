@@ -1,9 +1,11 @@
 import {db} from "../database/db.js";
 import bcrypt from "bcrypt";
 import { LoginUserDto } from "../models/dto/user/loginUserDto.js";
+import { NextFunction, Request, Response } from "express";
+import { CreateUser } from "../models/dto/user/createUserDto.js";
 
-function checkPassword(req, res, next) {
-    const { password, confirmPassword } = req.body;
+function checkPassword(req: Request, res: Response, next: NextFunction) {
+    const { password, confirmPassword } = req.body as CreateUser;
     if (password !== confirmPassword) {
         return res.status(422).send("Os campos de senha e confirmar senha devem ser iguais.");
     }
@@ -11,7 +13,7 @@ function checkPassword(req, res, next) {
 }
 
 async function checkExistingUser(req, res, next) {
-    const { email } = req.body;
+    const { email } = req.body as CreateUser;
     try {
         const user = (await db.query('SELECT * FROM users WHERE email = $1', [email]));
         if (user.rows[0]) {
@@ -44,7 +46,7 @@ async function checkLoginUser(req, res, next) {
 }
 
 async function checkToken(req, res, next) {
-    const token = req.headers.authorization?.replace("Bearer ", "");
+    const token: string = req.headers.authorization?.replace("Bearer ", "");
     if (!token) {
         return res.sendStatus(401);
     }

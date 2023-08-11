@@ -1,6 +1,7 @@
 import { db } from '../database/db.js';
+import { User } from '../models/entity/userEntity.js';
 
-async function getUrlsByUser(user) {
+async function getUrlsByUser(user: User) {
     return (await db.query('SELECT id, "shortUrl", url, "visitCount" FROM urls WHERE "userId" = $1', [user.id])).rows;
 }
 
