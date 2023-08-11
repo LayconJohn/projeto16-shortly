@@ -1,10 +1,14 @@
+import { Request, Response } from "express";
+import { CreateUrl } from "../models/dto/url/createUrlDto.js";
+import { UrlDto } from "../models/dto/url/urlDto.js";
+import { Session } from "../models/entity/sessionEntity.js";
 import urlService from "../services/urlService.js";
 
-async function shortenUrl(req, res) {
-    const {url} = req.body;
-    const session = res.locals.session;    
+async function shortenUrl(req: Request, res: Response) {
+    const url = req.body as UrlDto;
+    const session: Session = res.locals.session;    
     try {
-        const shortUrl = await urlService.shortenUrl(session.id, url);
+        const shortUrl = await urlService.shortenUrl(session.id, url.url);
         return res.status(201).send({shortUrl: `${shortUrl}`});
     } catch (error) {
         console.error(error.message);
@@ -12,11 +16,11 @@ async function shortenUrl(req, res) {
     } 
 }
 
-async function getUrlById(req, res) {
+async function getUrlById(req: Request, res: Response) {
     const {id} = req.params;
-    const url = res.locals.url;
+    const url: UrlDto = res.locals.url;
     try {
-        const urlById = await urlService.getUrlById(url, id);
+        const urlById: UrlDto = await urlService.getUrlById(url, Number(id));
         return res.status(200).send(urlById);
     } catch (error) {
         if (error.message === "NOT_FOUND") {
@@ -26,8 +30,8 @@ async function getUrlById(req, res) {
     }
 }
 
-async function redirectUrl(req, res) {
-    const url = res.locals.url;
+async function redirectUrl(req: Request, res: Response) {
+    const url: UrlDto = res.locals.url;
 
     try {
         await urlService.redirectUrl(url);
@@ -37,12 +41,12 @@ async function redirectUrl(req, res) {
     }
 }
 
-async function deleteUrl(req, res) {
+async function deleteUrl(req: Request, res: Response) {
     const {id} = req.params;
-    const session = res.locals.session;
-    const url = res.locals.url;
+    const session: Session = res.locals.session;
+    const url: UrlDto = res.locals.url;
     try {
-        await urlService.deleteUrl(url, session, id);
+        await urlService.deleteUrl(url, session, Number(id));
         return res.sendStatus(204);
     } catch (error) {
         if (error.message === "UNAUTHORIZED") {

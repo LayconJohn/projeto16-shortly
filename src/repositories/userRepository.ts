@@ -1,11 +1,12 @@
 import { db } from '../database/db.js';
+import { Url } from '../models/entity/urlEntity.js';
 import { User } from '../models/entity/userEntity.js';
 
-async function getUrlsByUser(user: User) {
+async function getUrlsByUser(user: User): Promise<Url[]> {
     return (await db.query('SELECT id, "shortUrl", url, "visitCount" FROM urls WHERE "userId" = $1', [user.id])).rows;
 }
 
-async function getRanking() {
+async function getRanking(): Promise<Url[]> {
     return (await db.query(`
     SELECT
     users.id,

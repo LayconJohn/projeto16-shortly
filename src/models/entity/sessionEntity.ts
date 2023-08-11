@@ -1,5 +1,5 @@
 export type Session = {
-    id?: string | number;
+    id?: number;
     userId: number | string;
     token: string;
 }

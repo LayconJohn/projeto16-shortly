@@ -1,4 +1,5 @@
 import {db} from "../database/db.js"
+import { UrlDto } from "../models/dto/url/urlDto.js";
 
 async function checkExistingUrl(req, res, next) {
     const {id} = req.params;
@@ -8,7 +9,7 @@ async function checkExistingUrl(req, res, next) {
         if (!url) {
             return res.sendStatus(404);
         }
-        res.locals.url = url;
+        res.locals.url = url as UrlDto;
         next();
     } catch (error) {
         console.error(error.message);
